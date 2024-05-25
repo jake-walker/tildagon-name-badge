@@ -1,0 +1,14 @@
+[name]
+name = "Name Badge"
+category = "Badge"
+wifi_preference = false
+
+[entry]
+class = "NameBadge"
+
+[metadata]
+author = "jake-walker"
+license = "Unlicense"
+url = "https://github.com/jake-walker/tildagon-name-badge"
+description = "A simple 'Hello my name is' sticker style Tildagon name badge"
+version = "0.0.1"

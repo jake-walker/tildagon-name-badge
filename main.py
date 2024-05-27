@@ -1,6 +1,9 @@
+import time
+
 import app
 from app_components import TextDialog, clear_background
 from events.input import BUTTON_TYPES, Buttons
+from perf_timer import PerfTimer
 
 
 class NameBadge(app.App):
@@ -26,28 +29,35 @@ class NameBadge(app.App):
             f.write(self.name)
 
     async def run(self, render_update):
-        if self.name is None:
-            dialog = TextDialog("What is your name?", self)
-            self.overlays = [dialog]
+        last_time = time.ticks_ms()
+        while True:
+            cur_time = time.ticks_ms()
+            delta_ticks = time.ticks_diff(cur_time, last_time)
+            with PerfTimer(f"Updating {self}"):
+                self.update(delta_ticks)
+            await render_update()
+            last_time = cur_time
 
-            if await dialog.run(render_update):
-                self.name = dialog.text
-                self.save_name()
-            else:
-                self.minimise()
+            if self.name is None:
+                dialog = TextDialog("What is your name?", self)
+                self.overlays = [dialog]
 
-            self.overlays = []
+                if await dialog.run(render_update):
+                    self.name = dialog.text
+                    self.save_name()
+                else:
+                    self.minimise()
 
-        await render_update()
+                self.overlays = []
 
     def update(self, delta):
         if self.button_states.get(BUTTON_TYPES["CANCEL"]):
             self.minimise()
+            self.button_states.clear()
 
     def draw(self, ctx):
         clear_background(ctx)
 
-        ctx.save()
         ctx.text_align = "center"
 
         # draw backgrounds
@@ -63,7 +73,5 @@ class NameBadge(app.App):
         ctx.font_size = 28
         ctx.font = "Arimo Bold"
         ctx.rgb(*self.header_fg_color).move_to(0, -30).text("my name is")
-
-        ctx.restore()
 
         self.draw_overlays(ctx)

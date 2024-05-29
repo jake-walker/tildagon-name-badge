@@ -1,4 +1,4 @@
-[name]
+[app]
 name = "Hello Name Badge"
 category = "Badge"
 wifi_preference = false
@@ -11,4 +11,4 @@ author = "jake-walker"
 license = "Unlicense"
 url = "https://github.com/jake-walker/tildagon-name-badge"
 description = "A simple 'Hello my name is' sticker style Tildagon name badge"
-version = "0.0.2"
+version = "0.0.3"

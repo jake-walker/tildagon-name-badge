@@ -7,8 +7,11 @@ from perf_timer import PerfTimer
 
 
 class NameBadge(app.App):
+    # colors used for the main name part
     bg_color = (0, 0, 0)
     fg_color = (255, 255, 255)
+
+    # colors used for the 'hello my name is' part
     header_bg_color = (255, 0, 0)
     header_fg_color = (255, 255, 255)
 
@@ -18,13 +21,15 @@ class NameBadge(app.App):
         self.button_states = Buttons(self)
 
     def load_name(self):
+        # try load the users name from the file
         try:
             with open("name", "r") as f:
                 self.name = f.read()
-        except:
+        except:  # noqa
             self.name = None
 
     def save_name(self):
+        # save the users name to a file
         with open("name", "w") as f:
             f.write(self.name)
 
@@ -46,12 +51,14 @@ class NameBadge(app.App):
                     self.name = dialog.text
                     self.save_name()
                 else:
+                    # no name was given, quit the app
                     self.minimise()
 
                 self.overlays = []
 
     def update(self, delta):
         if self.button_states.get(BUTTON_TYPES["CANCEL"]):
+            # quit the app
             self.minimise()
             self.button_states.clear()
 

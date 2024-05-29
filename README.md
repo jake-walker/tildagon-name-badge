@@ -6,8 +6,18 @@ A 'Hello my name is' sticker style name badge app for the [EMF](https://emfcamp.
 
 ![A screenshot of the name badge in the simulator](screenshot.png)
 
-## Configuration
+## Usage
+
+### Configuration
 
 The name shown on the badge is asked on first startup then saved into a file called `name` on the root of the device. If you later need to change your name, simply delete or edit the `name` file :)
 
 There are some hard-coded colour values part of the class which can be edited by hand.
+
+## Contributing
+
+Any pull requests are welcome!
+
+## License
+
+[The Unlicense](https://unlicense.org/)

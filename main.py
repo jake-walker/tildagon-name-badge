@@ -1,12 +1,15 @@
 import time
 
 import app
-from app_components import TextDialog, clear_background
+import settings
+from app_components import clear_background
 from events.input import BUTTON_TYPES, Buttons
 from perf_timer import PerfTimer
 
 
 class NameBadge(app.App):
+    name = None
+
     # colors used for the main name part
     bg_color = (0, 0, 0)
     fg_color = (255, 255, 255)
@@ -17,21 +20,8 @@ class NameBadge(app.App):
 
     def __init__(self):
         super().__init__()
-        self.load_name()
         self.button_states = Buttons(self)
-
-    def load_name(self):
-        # try load the users name from the file
-        try:
-            with open("name", "r") as f:
-                self.name = f.read()
-        except:  # noqa
-            self.name = None
-
-    def save_name(self):
-        # save the users name to a file
-        with open("name", "w") as f:
-            f.write(self.name)
+        self.name = settings.get("name")
 
     async def run(self, render_update):
         last_time = time.ticks_ms()
@@ -42,19 +32,6 @@ class NameBadge(app.App):
                 self.update(delta_ticks)
             await render_update()
             last_time = cur_time
-
-            if self.name is None:
-                dialog = TextDialog("What is your name?", self)
-                self.overlays = [dialog]
-
-                if await dialog.run(render_update):
-                    self.name = dialog.text
-                    self.save_name()
-                else:
-                    # no name was given, quit the app
-                    self.minimise()
-
-                self.overlays = []
 
     def update(self, delta):
         if self.button_states.get(BUTTON_TYPES["CANCEL"]):
@@ -80,5 +57,11 @@ class NameBadge(app.App):
         ctx.font_size = 28
         ctx.font = "Arimo Bold"
         ctx.rgb(*self.header_fg_color).move_to(0, -30).text("my name is")
+
+        if self.name is None:
+            ctx.font = "Arimo Italic"
+            ctx.rgb(*self.fg_color).move_to(0, 20).text(
+                "Set your name in\nthe settings app!"
+            )
 
         self.draw_overlays(ctx)

@@ -2,7 +2,7 @@ import time
 
 import app
 import settings
-from app_components import clear_background
+from app_components import TextDialog, clear_background
 from events.input import BUTTON_TYPES, Buttons
 from perf_timer import PerfTimer
 
@@ -32,6 +32,18 @@ class NameBadge(app.App):
                 self.update(delta_ticks)
             await render_update()
             last_time = cur_time
+
+            if self.name is None:
+                dialog = TextDialog("What is your name?", self)
+                self.overlays = [dialog]
+
+                if await dialog.run(render_update):
+                    self.name = dialog.text
+                    settings.set("name", dialog.text)
+                else:
+                    self.minimise()
+
+                self.overlays = []
 
     def update(self, delta):
         if self.button_states.get(BUTTON_TYPES["CANCEL"]):
@@ -65,3 +77,6 @@ class NameBadge(app.App):
             )
 
         self.draw_overlays(ctx)
+
+
+__app_export__ = NameBadge

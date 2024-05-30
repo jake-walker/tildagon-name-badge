@@ -40,6 +40,11 @@ class NameBadge(app.App):
                 if await dialog.run(render_update):
                     self.name = dialog.text
                     settings.set("name", dialog.text)
+
+                    try:
+                        settings.save()
+                    except Exception as ex:
+                        print("failed to save settings", ex)
                 else:
                     self.minimise()
 

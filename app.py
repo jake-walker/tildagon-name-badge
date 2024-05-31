@@ -59,7 +59,7 @@ class NameBadge(app.App):
     def draw(self, ctx):
         clear_background(ctx)
 
-        ctx.text_align = "center"
+        ctx.text_align = ctx.CENTER
 
         # draw backgrounds
         ctx.rgb(*self.bg_color).rectangle(-120, -120, 240, 240).fill()

@@ -55,6 +55,8 @@ class NameBadge(app.App):
             # quit the app
             self.minimise()
             self.button_states.clear()
+        if self.button_states.get(BUTTON_TYPES["LEFT"]):
+            settings.set("name", None)
 
     def draw(self, ctx):
         clear_background(ctx)

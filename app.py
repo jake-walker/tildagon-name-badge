@@ -9,7 +9,8 @@ from perf_timer import PerfTimer
 
 class NameBadge(app.App):
     name = None
-
+    confirm_clear = False
+    
     # colors used for the main name part
     bg_color = (0, 0, 0)
     fg_color = (255, 255, 255)
@@ -56,7 +57,12 @@ class NameBadge(app.App):
             self.minimise()
             self.button_states.clear()
         if self.button_states.get(BUTTON_TYPES["LEFT"]):
-            settings.set("name", None)
+            if self.confirm_clear:
+                settings.set("name", None)
+                self.name = None  # Also clear the local name variable
+                self.confirm_clear = False  # Reset the state
+            else:
+                self.confirm_clear = True
 
     def draw(self, ctx):
         clear_background(ctx)
@@ -83,6 +89,11 @@ class NameBadge(app.App):
                 "Set your name in\nthe settings app!"
             )
 
+        if self.name is None or self.confirm_clear:
+            ctx.font = "Arimo Italic"
+            ctx.rgb(*self.fg_color).move_to(0, 20).text(
+                "Press LEFT again to confirm clear" if self.confirm_clear else "Set your name in\nthe settings app!"
+            )
         self.draw_overlays(ctx)
 
 

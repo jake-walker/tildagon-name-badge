@@ -9,7 +9,8 @@ from perf_timer import PerfTimer
 
 class NameBadge(app.App):
     name = None
-
+    confirm_clear = False
+    
     # colors used for the main name part
     bg_color = (0, 0, 0)
     fg_color = (255, 255, 255)
@@ -55,6 +56,18 @@ class NameBadge(app.App):
             # quit the app
             self.minimise()
             self.button_states.clear()
+        if self.button_states.get(BUTTON_TYPES["LEFT"]):
+            if self.confirm_clear:
+                settings.set("name", None)
+                self.name = None
+                self.confirm_clear = False
+            else:
+                self.confirm_clear = True
+            self.button_states.clear()
+        if self.button_states.get(BUTTON_TYPES["CONFIRM"]):
+            self.confirm_clear = False
+            self.button_states.clear()
+            
 
     def draw(self, ctx):
         clear_background(ctx)
@@ -68,7 +81,7 @@ class NameBadge(app.App):
         ctx.font_size = 56
         ctx.font = "Arimo Bold"
         ctx.rgb(*self.header_fg_color).move_to(0, -60).text("Hello")
-        if self.name is not None:
+        if self.name is not None and not self.confirm_clear:
             ctx.rgb(*self.fg_color).move_to(0, 60).text(self.name)
 
         ctx.font_size = 28
@@ -77,11 +90,17 @@ class NameBadge(app.App):
 
         if self.name is None:
             ctx.font = "Arimo Italic"
-            ctx.rgb(*self.fg_color).move_to(0, 20).text(
+            ctx.rgb(*self.fg_color).move_to(80, 20).text(
                 "Set your name in\nthe settings app!"
             )
 
+        if self.confirm_clear:
+            ctx.font = "Arimo Italic"
+            ctx.rgb(*self.fg_color).move_to(40, 20).text(
+                "E - erase name \n  C - cancle"
+            )
         self.draw_overlays(ctx)
 
 
 __app_export__ = NameBadge
+

@@ -1,7 +1,5 @@
 # Tildagon Name Badge
 
-> I've only tested this on a simulator so far, so not sure if it works on real hardware yet!
-
 A 'Hello my name is' sticker style name badge app for the [EMF](https://emfcamp.org) 2024 [Tildagon Badge](https://tildagon.badge.emfcamp.org/).
 
 ![A screenshot of the name badge in the simulator](screenshot.png)
